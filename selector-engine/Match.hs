@@ -20,7 +20,6 @@ import Element
       Crumb(Crumb, siblingsBefore, siblingsAfter),
       Element(..),
       ElementData(EData, attributes, name),
-      Attr,
       getAttrValue,
       toZipper,
       zipperFold,
@@ -35,12 +34,6 @@ import Data.Bifunctor (Bifunctor(first))
 mnot :: Maybe a -> Maybe ()
 mnot Nothing = Just ()
 mnot _       = Nothing
-
-eqAttr :: Attr -> Attr -> Bool
-eqAttr (nameA, Nothing) (nameB, _      ) = nameA == nameB
-eqAttr _                (_    , Nothing) = False
-eqAttr (nameA, Just valueA) (nameB, Just valueB) =
-  nameA == nameB && valueA == valueB
 
 matchAncestor :: Selector -> Zipper -> Maybe Element
 matchAncestor selector zipper = do
@@ -69,6 +62,11 @@ match (Id elemId) zipper = match (Attr "id" (Just elemId)) zipper
 match (Attr name mValue) (element@Element {content = EData {attributes}}, _) = do
   guard $ any (eqAttr (name, words <$> mValue)) attributes
   pure element
+    where
+      eqAttr (nameA, Nothing) (nameB, _      ) = nameA == nameB
+      eqAttr _                (_    , Nothing) = False
+      eqAttr (nameA, Just valueA) (nameB, Just valueB) =
+        nameA == nameB && valueA == valueB
 
 match (AttrIncludes attrName str) (element, _) = do
   attrValue <- getAttrValue attrName element

@@ -12,16 +12,3 @@ data Envelope a = Envelope
   }
   deriving stock Generic
   deriving anyclass (FromJSON, ToJSON)
-
--- instance (ToJSON msg) => ToJSON (Envelope msg) where
---   toJSON (Envelope to message) = object
---     [ "to"      .= to
---     , "message" .= message
---     ]
-
--- instance (FromJSON msg) => FromJSON (Envelope msg) where
---   parseJSON (Object envelope) =
---     Envelope
---       <$> envelope .: "to"
---       <*> envelope .: "message"
---   parseJSON _ = fail "Bad message envelope format"

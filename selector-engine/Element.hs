@@ -5,7 +5,6 @@ module Element
   , Zipper
   , Attr
   , element
-  , textContent
   , getAttrValue
   , toZipper
   , getElement
@@ -50,9 +49,6 @@ attribute = do
     value <- pack <$> (try (some (satisfy isAlpha)) <|> "\"" *> manyTill (satisfy isAscii) "\"")
     pure $ words value
   pure (name, mValue)
-
-textContent :: Parser Text
-textContent = pack <$> many (satisfy $ \c -> isAscii c && c /= '<')
 
 element :: Parser Element
 element = do
